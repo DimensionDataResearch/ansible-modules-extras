@@ -29,8 +29,7 @@ short_description: add/delete backup client for a host
 description:
     - Add or delete a backup client for a host in the Dimension Data Cloud
 notes:
-    - If given state = 'present' and backup client is found, it is not
-    changed/edited.
+    - If given state = 'present' and backup client is found, it is not changed.
 version_added: "2.2"
 options:
   state:
