@@ -481,9 +481,9 @@ def start_stop_server(client, module, action, node, wait):
         elif action == 'start' or action == 'boot':
             res = client.ex_start_node(node)
     except DimensionDataAPIException as e:
-        module.fail_json(msg=err + e)
+        module.fail_json(msg="%s %s" % (err, e))
     if res is False:
-        module.fail_json(msg=err + e)
+        module.fail_json(msg="%s %s" % (err, e))
     try:
         quiesced_node = client.ex_get_node_by_id(node.id)
     except DimensionDataAPIException as e:
