@@ -487,9 +487,9 @@ def start_stop_server(client, module, action, node, wait):
     try:
         quiesced_node = client.ex_get_node_by_id(node.id)
     except DimensionDataAPIException as e:
-        module.fail_json(msg="Failed to get node details after %s " % action +
-                         "action. However server did %s." % action +
-                         "Error: %s" % e)
+        module.fail_json(msg="Failed to get node details after %s " +
+                         "action. However server did %s." +
+                         "Error: %s" % (action, action, e))
     return {'changed': True, "node": quiesced_node}
 
 
