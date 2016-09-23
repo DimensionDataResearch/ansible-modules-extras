@@ -186,8 +186,8 @@ def destroy_node(module, lb_driver, node):
         module.exit_json(changed=True, msg="Load balancer node deleted. " +
                          "Status: %s" % res)
     except DimensionDataAPIException as e:
-        module.fail_json(msg="Faield to delete/destroy node '%s'" % node.name +
-                         ': %s' % e)
+        module.fail_json(msg="Error while attempting to delete/destroy" + 
+                         " node '%s' : %s" % ( node.name, e))
 
 
 def main():

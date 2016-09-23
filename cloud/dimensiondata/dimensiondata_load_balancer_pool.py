@@ -335,8 +335,8 @@ def quiesce_members(module, lb_driver, pool):
         node = get_node_by_name_and_ip(module, lb_driver, name, data['ip'])
         if node is None:
             # Exit with error since nodes should pre-exist
-            module.fail_json(msg="Node '%s' does not exist. " % name +
-                             "You must create node first.")
+            module.fail_json(msg="Node '%s' does not exist. " +
+                             "You must create node first." % name)
         else:
             # node exists, let see if its attached and attach if not.
             res = filter(lambda x: x.node_id == node.id,
