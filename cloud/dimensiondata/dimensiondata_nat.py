@@ -159,9 +159,9 @@ def check_out_of_range(module, compute_driver, lb_driver, domain, ip):
                                      reuse_free=True, count=0)
 
     if ip not in res['addresses']:
-        module.fail_json(msg="IP address '%s'" % ip +
+        module.fail_json(msg="IP address '%s'" +
                          " is not associated with" +
-                         " domain %s." % domain.id)
+                         " domain %s." % (ip, domain.id))
 
 
 def main():
