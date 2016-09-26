@@ -43,7 +43,7 @@ options:
     description:
       - The state you want the hosts to be in.
     default: present
-    choices: [present, absent, running, stopped]
+    choices: [present, absent, running, stopped, list]
   nodes:
     description:
       - A list of server ID or names to work on.
@@ -181,6 +181,12 @@ EXAMPLES = '''
       - my_node_1
       - {{ node_id }}
     wait: yes
+
+# List servers
+- dimensiondata_compute:
+    network_domain: '{{ network_domain_id }}'
+    location: '{{ location }}'
+    ensure: list
 
 # Destroy servers
 - dimensiondata_compute:
@@ -605,6 +611,19 @@ def core(module):
     DimensionData = get_driver(Provider.DIMENSIONDATA)
     client = DimensionData(user_id, key, region=region)
 
+    if module.params['ensure'] == 'list':
+        nodes_list = []
+        nodes = get_all_nodes(client, module)
+        for node in nodes:
+            nodes_list.append(node_to_node_obj(node))
+        module.exit_json(changed=False,
+                         msg="Successfully retrieved node list.",
+                         nodes=nodes_list)
+
+    # ensure not 'list' so we acquiesce
+    if module.params['nodes'] is None:
+        module.fail_json(msg="'nodes' argument must be specified when 'ensure'"
+                             " is not 'list'.")
     validate_unique_names(client, module)
 
     validate_ipv4s_node_count(client, module)
@@ -627,18 +646,20 @@ def main():
             ensure=dict(default='present', choices=['present',
                                                     'absent',
                                                     'running',
-                                                    'stopped']),
-            nodes=dict(type='list', aliases=['server_id',
-                                             'server_ids',
-                                             'node_id']),
+                                                    'stopped',
+                                                    'list']),
+            nodes=dict(required=False, default=None, type='list',
+                       aliases=['server_id',
+                                'server_ids',
+                                'node_id']),
             image=dict(),
             vlans=dict(required=False, type='list', default=None),
             ipv4_addresses=dict(required=False, type='list', default=None),
             network_domain=dict(),
             location=dict(required=True, type='str'),
-            admin_password=dict(),
-            description=dict(),
-            memory_gb=dict(),
+            admin_password=dict(required=False, default=None),
+            description=dict(required=False, default=None),
+            memory_gb=dict(required=False, default=None),
             primary_dns=dict(required=False, default=None,
                              type='str'),
             secondary_dns=dict(required=False, default=None,
