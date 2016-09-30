@@ -576,8 +576,8 @@ def quiesce_servers_states(client, module, nodes_dict):
                     changed = True
                 except DimensionDataAPIException as e:
                     module.fail_json(msg="Error while destroying node " +
-                                     "'%s' in state '%s': " % (n.id, n.state) +
-                                     "%s" % e)
+                                     "'%s' in state '%s': %s" %
+                                     (n.id, n.state, e))
                 quiesced_nodes.append(node_to_node_obj(n))
     return {'changed': changed, 'nodes': quiesced_nodes}
 
